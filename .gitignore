@@ -1,1 +1,7 @@
 *.exe
+ffmpeg
+ffprobe
+*.mp3
+*.aac
+*.mkv
+*.webm
