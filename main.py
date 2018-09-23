@@ -54,13 +54,13 @@ def text_search_test():
         color_numbers = Back.MAGENTA + Fore.WHITE 
         end_color = Style.RESET_ALL
         new_title = titles[i] + " "
-        print('{:-<60s} {}{}{}'.format(nepip install ffmpeg-pythonw_title, color_numbers, str([i]), end_color))
-    input_text2 = input("\nFound " + Backpip install ffmpeg-python.BLUE + Fore.YELLOW + str(len(titles)) + end_color + " matches. Enter number to download: ")
-pip install ffmpeg-python
-    if input_text2:pip install ffmpeg-python
-        the_string = "https://youtube.compip install ffmpeg-python" + somethin[int(input_text2)]
-    else: pip install ffmpeg-python
-        the_string = "https://youtube.compip install ffmpeg-python" + somethin[0]
+        print('{:-<60s} {}{}{}'.format(new_title, color_numbers, str([i]), end_color))
+    input_text2 = input("\nFound " + Back.BLUE + Fore.YELLOW + str(len(titles)) + end_color + " matches. Enter number to download: ")
+
+    if input_text2:
+        the_string = "https://youtube.com" + somethin[int(input_text2)]
+    else:
+        the_string = "https://youtube.com" + somethin[0]
 
     
     file_name = input("Would you like the name of this file to be '" + input_text + "' Y/n: ")
