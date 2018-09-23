@@ -13,7 +13,7 @@ import os.path
 
 # Constants
 # Init for colors on windows
-init(convert=True)
+init()
 EXT = "mp3"
 DATA_FOLDER = "downloads/"
 
@@ -37,7 +37,7 @@ def my_hook(d):
 def text_search_test():
     print("Welcome to " + Back.GREEN + Fore.BLACK + "Visions" + Style.RESET_ALL + "!\n")
     print("Press ctrl+c to exit at any time.")
-    input_text = input("Please enter the " + Back.GREEN + Fore.BLACK + "'Artist - Song'" +Style.RESET_ALL+ " you are looking for: ")
+    input_text = input("Please enter the 'Artist - Song' you are looking for: ")
     query = urllib.parse.quote(input_text)
     url = "https://www.youtube.com/results?search_query=" + query
     response = urlopen(url)
@@ -55,7 +55,7 @@ def text_search_test():
         end_color = Style.RESET_ALL
         new_title = titles[i] + " "
         print('{:-<60s} {}{}{}'.format(new_title, color_numbers, str([i]), end_color))
-    input_text2 = input("\nFound " + Back.GREEN + Fore.BLACK + str(len(titles)) + end_color + " matches. Enter number to download: ")
+    input_text2 = input("\nFound " + str(len(titles)) + " matches. Enter number to download: ")
 
     if input_text2:
         the_string = "https://youtube.com" + somethin[int(input_text2)]
@@ -80,10 +80,10 @@ def tag_that_shit(mp3):
     except ID3NoHeaderError:
         audio = EasyID3()
 
-    audio['artist'] = input(u"Please enter a "+ Back.GREEN + Fore.BLACK +"artist"+Style.RESET_ALL + ": ")    
-    audio['title'] = input(u"Please enter a "+ Back.GREEN + Fore.BLACK +"title"+Style.RESET_ALL + ": ")
-    audio['album'] = input(u"Please enter a "+ Back.GREEN + Fore.BLACK +"album"+Style.RESET_ALL + ": ")
-    audio['date'] = input(u"Please enter a " + Back.GREEN + Fore.BLACK + "year"+Style.RESET_ALL + ": ")
+    audio['artist'] = input(u"Please enter a artist: ")    
+    audio['title'] = input(u"Please enter a title: ")
+    audio['album'] = input(u"Please enter a album: ")
+    audio['date'] = input(u"Please enter a year: ")
     audio['composer'] = u""
     # throws error but works?
     audio.save(mp3)
