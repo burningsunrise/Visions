@@ -1,15 +1,9 @@
-#!/usr/bin/python
-
-import ydl_binaries
-from shutil import copyfile
+#!/usr/bin/env python3
 import os
-import inspect
+import ydl_binaries
 
 def setup():
-    # Windows users looks like this
-    # C:\\Users\\Somethin\\Documents\\visions
-    ydl_binaries.download_ffmpeg("/home/somethin/Documents/visions")
-    # Leave commented unless you need youtube_dl
-    # ydl_binaries.update_ydl("/home/somethin/Documents/visions")
+    ydl_binaries.download_ffmpeg(os.getcwd())
 
-setup()
+if __name__ == "__main__":
+    setup()

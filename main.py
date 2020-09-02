@@ -1,14 +1,11 @@
-#!/usr/bin/python
-
-import youtube_dl
+#!/usr/bin/env python3
 import urllib.parse
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
-from mutagen.easyid3 import EasyID3
-from mutagen.id3 import ID3, ID3NoHeaderError
-from colorama import init
-from colorama import Fore, Back, Style
 import os.path
+import youtube_dl
+from mutagen.easyid3 import EasyID3
+from mutagen.id3 import ID3NoHeaderError
+from colorama import init, Fore, Back, Style
+import requests
 
 
 # Constants
@@ -34,33 +31,39 @@ def my_hook(d):
         print('Done downloading, now converting ...')
 
 
-def text_search_test():
+def text_search():
     print("Welcome to " + Back.GREEN + Fore.BLACK + "Visions" + Style.RESET_ALL + "!\n")
     print("Press ctrl+c to exit at any time.")
     input_text = input("Please enter the 'Artist - Song' you are looking for: ")
-    query = urllib.parse.quote(input_text)
-    url = "https://www.youtube.com/results?search_query=" + query
-    response = urlopen(url)
-    html = response.read()
-    soup = BeautifulSoup(html, features="html.parser")
-    data = soup.findAll('a', attrs={'class':'yt-uix-tile-link'})
-    titles = []
-    somethin = []
-    for vid in data:
-        titles.append(vid['title'])
-        somethin.append(vid['href'])
-    print("\n")
-    for i in range(len(titles)):
+    url = requests.get("https://www.youtube.com/results?search_query="+ urllib.parse.quote(input_text, safe=""))
+    url = url.text[url.text.index("ytInitialData")+17::]
+    url = url[:url.index('window["ytInitialPlayerResponse"]')-6]
+    true = True; false = False
+    url = eval(url)
+    lotsOfShits = url["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"]["sectionListRenderer"]["contents"]
+    results = {}
+    for miniShits in lotsOfShits:
+        if "itemSectionRenderer" not in miniShits.keys():
+            continue
+        for content in miniShits["itemSectionRenderer"]["contents"]:
+            try:
+                if "videoRenderer" in content.keys():
+                    results[content["videoRenderer"]["title"]["runs"][0]["text"]] = content["videoRenderer"]["videoId"]
+            except Exception as e:
+                print(e)
+    i = 0
+    for title, video_id in results.items():
         color_numbers = Back.MAGENTA + Fore.WHITE 
         end_color = Style.RESET_ALL
-        new_title = titles[i] + " "
+        new_title = title + " "
         print('{:-<60s} {}{}{}'.format(new_title, color_numbers, str([i]), end_color))
-    input_text2 = input("\nFound " + str(len(titles)) + " matches. Enter number to download: ")
+        i+=1
+    input_text2 = input("\nFound " + str(len(results)) + " matches. Enter number to download: ")
 
     if input_text2:
-        the_string = "https://youtube.com" + somethin[int(input_text2)]
+        the_string = "https://www.youtube.com/watch?v=" + list(results.values())[int(input_text2)]
     else:
-        the_string = "https://youtube.com" + somethin[0]
+        the_string = "https://www.youtube.com/watch?v=" + list(results.values())[0]
 
     
     file_name = input("\nWould you like the name of this file to be '" + input_text + "' Y/n: ")
@@ -90,7 +93,7 @@ def tag_that_shit(mp3):
     print("Saved your ID3 tags!\n\n")
 
 
-def get_mp3(text_search_test):
+def get_mp3(text_search):
     ydl_opts = {
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
@@ -100,16 +103,17 @@ def get_mp3(text_search_test):
         'logger': MyLogger(),
         'progress_hooks': [my_hook],
         'prefer-ffmpeg': True,
-        'outtmpl': DATA_FOLDER + text_search_test[1]
+        'outtmpl': DATA_FOLDER + text_search[1],
+        'ffmpeg_location': os.getcwd()
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([text_search_test[0]])
+        ydl.download([text_search[0]])
 
 
 def main():
     try:
         while True:
-            url_file = text_search_test()
+            url_file = text_search()
             get_mp3(url_file)
 
             # Check if the file exists
